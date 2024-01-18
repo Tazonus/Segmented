@@ -54,13 +54,13 @@ class SegmenterGUI:
         self.title_var = tk.StringVar()
         self.title_var.set(self.segmenter.title)
         title_label = ttk.Label(self.root, textvariable=self.title_var, font=('Helvetica', 18))
-        title_label.grid(row=0, column=1, columnspan=4, pady= [8,0])
+        title_label.grid(row=0, column=1, columnspan=1000, pady= [8,0])
 
         #Label displaying category
         self.category_var = tk.StringVar()
         self.category_var.set(self.segmenter.category)
         category_label = ttk.Label(self.root, textvariable=self.category_var, font=('Helvetica', 12))
-        category_label.grid(row=1, column=1, columnspan=4)
+        category_label.grid(row=1, column=1, columnspan=1000)
 
         #Buttons for different actions
         buttons = [
@@ -75,8 +75,8 @@ class SegmenterGUI:
 
         #List displaying split times
         self.segment_list = tk.Listbox(self.root, selectmode=tk.BROWSE, font=('Helvetica', 10), width=50, height=20)
-        self.segment_list.grid(row=2, column=1, columnspan=3, padx=10, pady=10, rowspan=10)
-
+        self.segment_list.grid(row=2, column=3, columnspan=1, padx=3, pady=10, rowspan=10)
+        
         #Label displaying current time
         self.segmenter.current_time_label_var = tk.StringVar()
         current_time_label = ttk.Label(self.root, textvariable=self.segmenter.current_time_label_var, font=('Helvetica', 16))
@@ -91,8 +91,11 @@ class SegmenterGUI:
 #by clearing whole list and filling it again
     def update_segment_list(self):
         self.segment_list.delete(0, tk.END) 
+        i = 0
         for line in self.segmenter.curent_run_lines:
-            self.segment_list.insert(tk.END, line)
+            time_stamp = self.segmenter.make_line(line, i)
+            self.segment_list.insert(tk.END, time_stamp)
+            i += 1
 
 #Updates labels
 #loops via self-invocation, loop end when root.destroy() is invoked

@@ -9,6 +9,7 @@ class Segmenter:
         self.category = "Any% Normal"
         
         # these will go to tuple:
+        
         self.segments_time = []
         self.segment_names = [
             "Liberation Day", "The Outlaws", "Zero Hour", "Smash and Grab",
@@ -45,8 +46,8 @@ class Segmenter:
 
     #inputs     time
     #returns    easy to read text about segment
-    def make_line(self, current_time):
-        return (f"{self.segment_names[self.current_segment]}: {self.format_time(current_time)}")
+    def make_line(self, current_time, segment):
+        return (f"{self.segment_names[segment]}: {self.format_time(current_time)}")
         #in progress
         
 
@@ -60,7 +61,7 @@ class Segmenter:
             self.start_time = time.time()
             self.is_running = True
             while len(self.curent_run_lines) < len(self.segment_names):
-                self.curent_run_lines.append("")
+                self.curent_run_lines.append(0)
         print("Start time.")
 
     #stops the segmenting
@@ -94,11 +95,11 @@ class Segmenter:
             if self.current_segment < len(self.segment_names) - 1:
                 segment_name = self.segment_names[self.current_segment]
 
-                self.curent_run_lines[self.current_segment] = self.make_line(current_time)
+                self.curent_run_lines[self.current_segment] = current_time
             else:
                 if self.current_segment == len(self.segment_names) - 1:
                     segment_name = self.segment_names[self.current_segment]
-                    self.curent_run_lines[self.current_segment] = self.make_line(current_time)
+                    self.curent_run_lines[self.current_segment] = current_time
                 self.stop()
             self.current_segment += 1
         else:
