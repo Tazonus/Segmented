@@ -9,15 +9,20 @@ class SegmenterGUI:
         self.root.geometry("500x450")
         self.segmenter = seg.Segmenter()
 
-        # Create and configure the status label
-        self.status_var = tk.StringVar()
-        self.status_var.set(self.segmenter.title)
-        status_label = ttk.Label(self.root, textvariable=self.status_var, font=('Helvetica', 18))
-        status_label.grid(row=0, column=1, columnspan=4, pady=10)
+        #TLabel displaying title
+        self.title_var = tk.StringVar()
+        self.title_var.set(self.segmenter.title)
+        title_label = ttk.Label(self.root, textvariable=self.title_var, font=('Helvetica', 18))
+        title_label.grid(row=0, column=1, columnspan=4, pady= [8,0])
 
-        # Create buttons for different actions
+        self.category_var = tk.StringVar()
+        self.category_var.set(self.segmenter.category)
+        category_label = ttk.Label(self.root, textvariable=self.category_var, font=('Helvetica', 12))
+        category_label.grid(row=1, column=1, columnspan=4)
+
+        #Buttons for different actions
         buttons = [
-            ("Split", "split"),
+            ("Segment", "segment"),
             ("Stop", "stop"),
             ("Reset", "reset"),
             ("Exit", "exit")
@@ -25,29 +30,30 @@ class SegmenterGUI:
 
         for i, (text, action) in enumerate(buttons):
             button = ttk.Button(self.root, text=text, command=lambda a=action: self.handle_button_click(a))
-            button.grid(row=i + 1, column=0, pady=5)
+            button.grid(row=i + 2, column=0, pady=5)
 
-        # Create a Listbox for displaying split times
-        self.splits_list = tk.Listbox(self.root, selectmode=tk.BROWSE, font=('Helvetica', 10), width=50, height=20)
-        self.splits_list.grid(row=1, column=1, columnspan=3, padx=10, pady=10, rowspan=10)
+        #List displaying split times
+        self.segment_list = tk.Listbox(self.root, selectmode=tk.BROWSE, font=('Helvetica', 10), width=50, height=20)
+        self.segment_list.grid(row=2, column=1, columnspan=3, padx=10, pady=10, rowspan=10)
 
-        # Create a label to display the current time
+        #Label displaying current time
         self.segmenter.current_time_label_var = tk.StringVar()
         current_time_label = ttk.Label(self.root, textvariable=self.segmenter.current_time_label_var, font=('Helvetica', 16))
-        current_time_label.grid(row=12, column=1, columnspan=4, pady=5)
+        current_time_label.grid(row=13, column=1, columnspan=4, pady=5)
 
-        # Create a label to display the time since the last split
-        self.segmenter.split_time_label_var = tk.StringVar()
-        split_time_label = ttk.Label(self.root, textvariable=self.segmenter.split_time_label_var, font=('Helvetica', 12))
-        split_time_label.grid(row=13, column=1, columnspan=4, pady=5)
+        #Label displaying time since the last segment(not split)
+        self.segmenter.segment_time_label_var = tk.StringVar()
+        segment_time_label = ttk.Label(self.root, textvariable=self.segmenter.segment_time_label_var, font=('Helvetica', 12))
+        segment_time_label.grid(row=14, column=1, columnspan=4, pady=5)
 
-        # Run the main loop
+        #Main loop:
         self.update_labels()
         self.root.mainloop()
     
+    #Handles button click
     def handle_button_click(self, action):
-        if action == "split":
-            self.segmenter.split()
+        if action == "segment":
+            self.segmenter.segment()
         elif action == "stop":
             self.segmenter.stop()
         elif action == "reset":
@@ -55,22 +61,24 @@ class SegmenterGUI:
         elif action == "exit":
             self.root.destroy()
 
-    def update_splits_list(self):
-        self.splits_list.delete(0, tk.END)  # Usuń wszystkie elementy z Listbox
-
+    #Updates list of segmments
+    #by clearing whole list and filling it again
+    def update_segment_list(self):
+        self.segment_list.delete(0, tk.END) 
         for line in self.segmenter.curent_run_lines:
-            self.splits_list.insert(tk.END, line)  # Dodaj nowe splity do Listbox
+            self.segment_list.insert(tk.END, line)
 
+    #Updates labels
+    #loops via self-invocation, loop end when root.destroy() is invoked
     def update_labels(self):
         current_time = self.segmenter.get_curent_time()
-        split_time = self.segmenter.format_time(self.segmenter.last_segment_time)
+        segment_time = self.segmenter.get_segment_time()
 
         self.segmenter.current_time_label_var.set(f"Current Time: {current_time}")
-        self.segmenter.split_time_label_var.set(f"Split Time: {split_time}")
-
-        self.update_splits_list()  # Aktualizuj Listbox z splitami
-
-        self.root.after(10, self.update_labels)
+        self.segmenter.segment_time_label_var.set(f"Segment Time: {segment_time}")
+        self.update_segment_list()
+        
+        self.root.after(10, self.update_labels) #updates every 10 miliseconds
 
 if __name__ == "__main__":
     app = SegmenterGUI()
