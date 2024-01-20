@@ -26,6 +26,7 @@ class Segmenter:
         self.last_segment_time = 0
         self.current_segment = 0
         self.curent_run_lines = []
+        self.reset()
 
 ### TEXT EDIT ### - this section takes hold of making data easy to read
 ##   later i will make its own class so it could handle user customisation
@@ -80,7 +81,11 @@ class Segmenter:
         self.start_time = 0
         self.last_segment_time = 0
         self.current_segment = 0
+
         self.curent_run_lines = []
+        while len(self.curent_run_lines) < len(self.segment_names):
+            self.curent_run_lines.append(0)
+            
         print("Reset time.")
 
     #segments timestamps

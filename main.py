@@ -16,9 +16,11 @@ class SegmenterGUI:
         self.shortcutBuffor = ""
 
         self.setup()
+        self.update_segment_list()
         #Main loop:
         self.update_labels()
         self.root.mainloop()
+
         
 
 ### INPUT HANDLING ###
@@ -75,7 +77,7 @@ class SegmenterGUI:
 
         #List displaying split times
         self.segment_list = tk.Listbox(self.root, selectmode=tk.BROWSE, font=('Helvetica', 10), width=50, height=20)
-        self.segment_list.grid(row=2, column=3, columnspan=1, padx=3, pady=10, rowspan=10)
+        self.segment_list.grid(row=2, column=1, columnspan=1, padx=3, pady=10, rowspan=10)
         
         #Label displaying current time
         self.segmenter.current_time_label_var = tk.StringVar()
