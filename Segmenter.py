@@ -7,9 +7,6 @@ class Segmenter:
         ## permanent storage:
         self.title = "Starcraft 2 - Wings of Liberty"
         self.category = "Any% Normal"
-        
-        # these will go to tuple:
-        
         self.segments_time = []
         self.segment_names = [
             "Liberation Day", "The Outlaws", "Zero Hour", "Smash and Grab",
@@ -18,7 +15,7 @@ class Segmenter:
             "A Sinister Turn", "Echoes of the Future", "The Moebius Factor",
             "Supernova", "Maw of the Void", "The Gates of Hell", "Shatter the Sky", "All In"
         ]
-        #stacraft 2 as place holder
+        # segment_times and segment_names will be merged into a tuple
 
         ## temporary storage:
         self.is_running = False
@@ -26,14 +23,16 @@ class Segmenter:
         self.last_segment_time = 0
         self.current_segment = 0
         self.curent_run_lines = []
+
         self.reset()
 
 ### TEXT EDIT ### - this section takes hold of making data easy to read
-##   later i will make its own class so it could handle user customisation
-    
-    #inputs     time
-    #returns    string which displays time in form of hh:mm:ss
+##   later i will make its own class so it will be easier to add user customisation
     def format_time(self, seconds):
+        """Formats time into readable form
+        Inputs  time in seconds
+        returns string which displays time in form of hh:mm:ss
+        """
         minutes, seconds = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
         
@@ -44,19 +43,14 @@ class Segmenter:
                 return f"{int(minutes):02}:{seconds:.2f}"
         else:
             return f"{int(hours):02}:{int(minutes):02}:{seconds:.2f}"
-
-    #inputs     time
-    #returns    easy to read text about segment
     def make_line(self, current_time, segment):
+        '''returns strng with info about segment'''
         return (f"{self.segment_names[segment]}: {self.format_time(current_time)}")
-        #in progress
-        
+        #in progress     
 
-### TIME MANAGMENT ### - this section takes hold of the segmenting process
-
-    #starts the segmenting
-    #for caution sake it invokes reset() so every temp data(line 22) will be set to default
+### TIME MANAGMENT ### - takes hold of the segmenting process
     def start(self):
+        '''Starts segmenting after reseting all temporary data'''
         if not self.is_running:
             self.reset()
             self.start_time = time.time()
@@ -64,19 +58,16 @@ class Segmenter:
             while len(self.curent_run_lines) < len(self.segment_names):
                 self.curent_run_lines.append(0)
         print("Start time.")
-
-    #stops the segmenting
-    #ending run quickly
     def stop(self):
+        '''stops segmenting ending run quickly'''
         if self.is_running:
             elapsed_time = time.time() - self.start_time
             self.is_running = False
             print(f"Stopped. Total time: {self.format_time(elapsed_time)}")
         else:
             print("There is nothing to be stoped :P")
-
-    #resets all data
     def reset(self):
+        "Resets all temporary data"
         self.is_running = False
         self.start_time = 0
         self.last_segment_time = 0
@@ -87,9 +78,8 @@ class Segmenter:
             self.curent_run_lines.append(0)
             
         print("Reset time.")
-
-    #segments timestamps
     def segment(self):
+        '''segments timestamps'''
         if self.is_running:
             print(f"Section {self.current_segment+1}.")
 
@@ -111,14 +101,12 @@ class Segmenter:
             self.start()
 
 ### GETTERS ###
-
     def get_curent_time(self):
         if self.is_running:
             curent_time = time.time() - self.start_time
             return self.format_time(curent_time)
         else:
             return self.format_time(self.last_segment_time)
-
     def get_segment_time(self):
         if self.is_running:
             segment_time = time.time() - self.start_time - self.last_segment_time
